@@ -5,21 +5,21 @@ Android learning notes
 
   #### [java基础](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md)
   
-   * [数据类型](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md##基本数据类型)
+   * [数据类型](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md#基本数据类型)
         
-   * [Object方法](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md##Object方法)
+   * [Object方法](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md#Object方法)
    
-   * [异常](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md##异常)
+   * [异常](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md#异常)
    
-   * [面向对象](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md##面向对象)
+   * [面向对象](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md#面向对象)
         
-   * [反射](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md##反射)
+   * [反射](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md#反射)
    
-   * [强软弱虚引用](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md##强软弱虚引用)
+   * [强软弱虚引用](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md#强软弱虚引用)
    
-   * [String源码分析](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md##String源码分析)
+   * [String源码分析](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md#String源码分析)
         
-   * [IO流](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md##IO流)
+   * [IO流](https://github.com/fei244611/AndroidLearning/blob/master/java/Java基础.md#IO流)
 
   #### [java集合](https://github.com/fei244611/AndroidLearning/blob/master/java/Java集合.md)
   
