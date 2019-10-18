@@ -1,7 +1,7 @@
 # Android IPC
 ---
 
-![E3EC2626-7842-4AD7-9B7B-857F49D4F734.png](:storage/64f3a638-0c64-4dfc-8911-894588c4d986/958e16d3.png)
+![E3EC2626-7842-4AD7-9B7B-857F49D4F734.png](../image/958e16d3.png)
 
 
 ## Binder
@@ -15,7 +15,7 @@
   
   Service进程会创建很多线程处理Binder请求，会采用由Binder驱动管理的线程池
 
-![c3a5b818.png](:storage/64f3a638-0c64-4dfc-8911-894588c4d986/c3a5b818.png)
+![c3a5b818.png](../image/c3a5b818.png)
 
   从代码实现说：Binder是一个实现IBinder接口的类
 
@@ -164,7 +164,7 @@ public interface IUserManager extends IInterface {
 ## Messenger：串行请求
 ---
 
-![75e44551.png](:storage/64f3a638-0c64-4dfc-8911-894588c4d986/75e44551.png)
+![75e44551.png](../image/75e44551.png)
 
 
 Service端：通过Handler创建Messenger信使，onBinder返回Messenger 的Binder

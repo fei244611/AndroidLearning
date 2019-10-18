@@ -26,7 +26,7 @@ switch参数：只支持能转换为int，enum或String的类型
 ## 异常 (try catch finally)
 ---
 
-![](http://images2015.cnblogs.com/blog/679904/201510/679904-20151025210813989-921927916.jpg)
+![](../image/20191018203248.png)
 
 ## 面向对象
 ---
@@ -107,7 +107,7 @@ BufferReader：缓冲式文本读取，readline()方法，new BufferReader(Input
 BufferedInputStream:缓冲读写字节流，flush()方法，new BufferInputStream(FileInputStream)
 
 
-<img src="https://img-blog.csdn.net/20160515211026437" width="500" height="350"/>
+<img src="../image/20191018203223.png" width="500"/>
 
 
 

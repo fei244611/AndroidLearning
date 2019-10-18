@@ -3,7 +3,7 @@
 ## JAVA 内存模型
 ---
 
-<img src="attachments/c3b70793.png" width="500"/>
+<img src="../image/c3b70793.png" width="500"/>
 
 
 **1、Java虚拟机栈：** 虚拟机调用执行Java方法的内存

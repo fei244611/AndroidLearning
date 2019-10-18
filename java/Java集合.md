@@ -1,6 +1,6 @@
 # 集合容器
 ---
-![aa224777.png](:storage/dbdd496c-d55e-4c2f-ba8c-644139583508/aa224777.png)
+![aa224777.png](../image/aa224777.png)
 
 ## ArrayList源码
 ---

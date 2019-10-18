@@ -3,7 +3,7 @@
 ## OkHttp
 ---
 
-![58cce92a.png](:storage/e5041621-066e-40e8-8844-37de2c81cdd5/58cce92a.png)
+![58cce92a.png](../image/58cce92a.png)
 
 #### 1、request：url/method/headers/body  封装Params
 

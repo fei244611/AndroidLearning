@@ -3,7 +3,7 @@
 ## 线程生命周期
 ---
 
-<img src="attachments/320bd541.png" width="500" height="350"/>
+<img src="../image/320bd541.png" width="500" height="350"/>
 
 
 1、Thread方法：t.start()   t2.join()/Thread.sleep()    Thread.yield()  Thread.interrupted()终止
@@ -89,7 +89,7 @@
 
 #### 3、Java并发包结构
 
-<img src="attachments/2d1f3f6f.png" width="500" height="350"/>
+<img src="../image/2d1f3f6f.png" width="500" height="350"/>
 
 
 #### 4、单例模式：双重检查，静态内部类
@@ -143,7 +143,7 @@
 
 对象头：Mark Word 32bit(锁及hascode信息)，对象指针 32bit，（数组长度 32bit）
 
-<img src="attachments/1592af26.png" width="800"/>
+<img src="../image/1592af26.png" width="800"/>
 
 
 
@@ -158,13 +158,13 @@
 
 4、子类通过继承同步器并重写其抽象方法来管理同步状态（抽象方法可调用AQS修改状态方法）
 
-<img src="attachments/23ff6aca.png" width="800"/>
+<img src="../image/23ff6aca.png" width="800"/>
 
 5、AQS基于模板方法模式，自定义同步组件（ReentrantLock,ReentrantReadWriteLock）调用模板方法实现同步
 
 包括独占式获取释放同步状态，共享式获取释放同步状态，查询同步队列等待线程三类方法
 
-<img src="attachments/78e42724.png" width="800"/>
+<img src="../image/78e42724.png" width="800"/>
 
 6、独占式同步状态获取和释放
 
@@ -209,7 +209,7 @@ acquireQueued()：头节点自旋获取同步状态
 
 释放流程：unlock() -> AQS.release() -> tryRelease()
 
-<img src="attachments/20e52037.png" width="600"/>
+<img src="../image/20e52037.png" width="600"/>
 
 3、ReentrantReadWriteLock：维护了一个读锁readLock，一个写锁writeLock
 

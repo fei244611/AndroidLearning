@@ -50,7 +50,7 @@ dispatchDraw绘制children
 
 onDrawScrollBars
 
-<img src="attachments/c2f3fbe8.png" width="600"/>
+<img src="../image/c2f3fbe8.png" width="600"/>
 
 
 ## View事件分发
