@@ -44,7 +44,8 @@ switch参数：只支持能转换为int，enum或String的类型
 ## 反射
 ---
 **Class类**
-| 方法 | 用途
+
+| 方法 | 用途|
 |----|----|
 |forName(String className) | 根据类名获取类的对象|
 |newInstance()|创建类的实例|
