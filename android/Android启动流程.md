@@ -169,7 +169,6 @@ phoneWindow.installDecor()创建dectorview（mDecor = generateDecor()，mContent
 
 6、phoneview —— dectorview  —— viewrootImpl
 
-<img src="../image/dde2d257.png" width="600"/>
 
 <img src="../image/20191019164613.png" width="600"/>
 
