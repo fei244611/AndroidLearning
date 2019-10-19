@@ -27,7 +27,6 @@ ViewGroup.measureChildWithMargins()
 childwidthMeasureSpec = getRootMeasureSpec(desiredWindowWidth, lp.width);
 childHeightMeasureSpec = getRootMeasureSpec(desiredWindowHeight, lp.width);
 performMeasure(childwidthMeasureSpec,childheightMeasureSpec);
-
 ```
 
 
@@ -69,15 +68,67 @@ measureChildren内部实质只是循环调用measureChild，measureChild和measu
 
 layout（setFrame确定四个顶点位置） onlayout(具体view重写，setChildFrame调用子layout方法)
 
+```
+// ViewRootImpl.java
+private void performLayout(WindowManager.LayoutParams lp, int desiredWindowWidth, int desiredWindowHeight) {
+    ...
+    host.layout(0, 0, host.getMeasuredWidth(), host.getMeasuredHeight());
+    ...
+}
+
+// View.java
+public void layout(int l, int t, int r, int b) {
+    ...
+    // 通过setFrame方法来设定View的四个顶点的位置，即View在父容器中的位置
+    boolean changed = isLayoutModeOptical(mParent) ? 
+    set OpticalFrame(l, t, r, b) : setFrame(l, t, r, b);
+
+    ...
+    onLayout(changed, l, t, r, b);
+    ...
+}
+
+// 空方法，子类如果是ViewGroup类型，则重写这个方法，通过setChildFrame调用子layout方法
+protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+
+}
+
+```
+
+
 #### 4、Draw过程：
 
-background.draw
+```
+public void draw(Canvas canvas) {
+    ...
+    // 步骤一：绘制View的背景
+    drawBackground(canvas);
 
-ondraw 绘制自我
+    ...
+    // 步骤二：如果需要的话，保持canvas的图层，为fading做准备
+    saveCount = canvas.getSaveCount();
+    ...
+    canvas.saveLayer(left, top, right, top + length, null, flags);
 
-dispatchDraw绘制children
+    ...
+    // 步骤三：绘制View的内容
+    onDraw(canvas);
 
-onDrawScrollBars
+    ...
+    // 步骤四：绘制View的子View
+    dispatchDraw(canvas);
+
+    ...
+    // 步骤五：如果需要的话，绘制View的fading边缘并恢复图层
+    canvas.drawRect(left, top, right, top + length, p);
+    ...
+    canvas.restoreToCount(saveCount);
+
+    ...
+    // 步骤六：绘制View的装饰(例如滚动条等等)
+    onDrawForeground(canvas)
+}
+```
 
 <img src="../image/c2f3fbe8.png" width="600"/>
 
