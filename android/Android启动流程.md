@@ -61,6 +61,78 @@ ActivThread.main()： 创建ActivityThread并绑定AMS，开启Looper，创建Bi
 
 7）activity.performStart()
 
+```
+private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
+    ...
+    ActivityInfo aInfo = r.activityInfo;
+    if (r.packageInfo == null) {
+        //step 1: 创建LoadedApk对象
+        r.packageInfo = getPackageInfo(aInfo.applicationInfo, r.compatInfo,
+                Context.CONTEXT_INCLUDE_CODE);
+    }
+    ... //component初始化过程
+
+    java.lang.ClassLoader cl = r.packageInfo.getClassLoader();
+    //step 2: 创建Activity对象
+    Activity activity = mInstrumentation.newActivity(cl, component.getClassName(), r.intent);
+    ...
+
+    //step 3: 创建Application对象
+    Application app = r.packageInfo.makeApplication(false, mInstrumentation);
+
+    if (activity != null) {
+        //step 4: 创建ContextImpl对象
+        Context appContext = createBaseContextForActivity(r, activity);
+        CharSequence title = r.activityInfo.loadLabel(appContext.getPackageManager());
+        Configuration config = new Configuration(mCompatConfiguration);
+        //step5: 将Application/ContextImpl都attach到Activity对象
+        activity.attach(appContext, this, getInstrumentation(), r.token,
+                r.ident, app, r.intent, r.activityInfo, title, r.parent,
+                r.embeddedID, r.lastNonConfigurationInstances, config,
+                r.referrer, r.voiceInteractor);
+
+        ...
+        int theme = r.activityInfo.getThemeResource();
+        if (theme != 0) {
+            activity.setTheme(theme);
+        }
+
+        activity.mCalled = false;
+        if (r.isPersistable()) {
+            //step 6: 执行回调onCreate
+            mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);
+        } else {
+            mInstrumentation.callActivityOnCreate(activity, r.state);
+        }
+
+        r.activity = activity;
+        r.stopped = true;
+         //执行回调onStart
+        if (!r.activity.mFinished) {
+            activity.performStart();
+            r.stopped = false;
+        }
+        if (!r.activity.mFinished) {
+            //执行回调onRestoreInstanceState
+            if (r.isPersistable()) {
+                if (r.state != null || r.persistentState != null) {
+                    mInstrumentation.callActivityOnRestoreInstanceState(activity, r.state,
+                            r.persistentState);
+                }
+            } else if (r.state != null) {
+                mInstrumentation.callActivityOnRestoreInstanceState(activity, r.state);
+            }
+        }
+        ...
+        r.paused = true;
+        mActivities.put(r.token, r);
+    }
+
+    return activity;
+}
+
+```
+
 
 4、setContentView()：
 
