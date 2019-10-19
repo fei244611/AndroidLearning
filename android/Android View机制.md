@@ -61,6 +61,7 @@ measureChildren内部实质只是循环调用measureChild，measureChild和measu
         }
         return result;
     }
+    
 ```
 
 
@@ -230,6 +231,27 @@ public boolean onTouchEvent(MotionEvent event) {
 重写onDraw(padding)
 
 重写onMeasure(wrap_content)
+
+```
+    // wrap_parent 适配
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    	//第一步:调用super.onMeasure()
+    	super.onMeasure(widthMeasureSpec , heightMeasureSpec);
+	    int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+	    int widthSpceSize = MeasureSpec.getSize(widthMeasureSpec);
+	    int heightSpecMode=MeasureSpec.getMode(heightMeasureSpec);
+	    int heightSpceSize=MeasureSpec.getSize(heightMeasureSpec);
+	    
+	    //第二步:处理子View的大小为wrap_content的情况
+	    if(widthSpecMode==MeasureSpec.AT_MOST&&heightSpecMode==MeasureSpec.AT_MOST){
+	    	setMeasuredDimension(mWidth, mHeight);
+	    }else if(widthSpecMode==MeasureSpec.AT_MOST){
+	    	setMeasuredDimension(mWidth, heightSpceSize);
+	    }else if(heightSpecMode==MeasureSpec.AT_MOST){
+	    	setMeasuredDimension(widthSpceSize, mHeight);
+	    } 
+	 }
+```
 
 
 2、继承特定View
