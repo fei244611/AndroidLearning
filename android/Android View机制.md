@@ -35,6 +35,34 @@ performMeasure(childwidthMeasureSpec,childheightMeasureSpec);
 
 View.measure() -> View.onMeasure()(setMeasuredDimension/getDefaultSize) -> ViewGroup.measureChidren
 
+ViewGroup类提供了measureChildren, measureChild, measureChildWithMargins方法，简化了父子View的尺寸计算。
+measureChildren内部实质只是循环调用measureChild，measureChild和measureChildWithMargins的区别是margin和padding也作为子视图的大小
+
+```
+    // onMeasure默认实现，通过getDefaultSize对成员变量mMeasuredWidth和mMeasuredHeight进行赋值
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec),
+                getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec));
+    }
+    
+    public static int getDefaultSize(int size, int measureSpec) {
+        int result = size;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+
+        switch (specMode) {
+        case MeasureSpec.UNSPECIFIED:
+            result = size;
+            break;
+        case MeasureSpec.AT_MOST:
+        case MeasureSpec.EXACTLY:
+            result = specSize;
+            break;
+        }
+        return result;
+    }
+```
+
 
 #### 3、Layout过程：
 
