@@ -325,7 +325,114 @@ wrap_content， padding， margin处理
 
 滑动冲突
 
+## Window / WindowManager
 
+Window 是一个抽象类，它的具体实现是 PhoneWindow。WindowManager 是外界访问 Window 的入口，Window 的具体实现位于 WindowManagerService 中，WindowManager 和 WindowManagerService 的交互是一个 IPC 过程。Android 中所有的视图都是通过 Window 来呈现，因此 Window 实际是 View 的直接管理者。
+
+| Window 类型 | 说明 | 层级
+|--|--|--
+| Application Window | 对应着一个 Activity | 1~99
+| Sub Window | 不能单独存在，只能附属在父 Window 中，如 Dialog 等 | 1000~1999
+| System Window | 需要权限声明，如 Toast 和 系统状态栏等 | 2000~2999
+
+
+```java
+
+// WindowManagerImpl.java
+@Override
+public void addView(@NonNull View view, @NonNull ViewGroup.LayoutParams params) {
+    applyDefaultToken(params);
+    mGlobal.addView(view, params, mContext.getDisplay(), mParentWindow);
+}
+
+@Override
+public void updateViewLayout(@NonNull View view, @NonNull ViewGroup.LayoutParams params) {
+    applyDefaultToken(params);
+    mGlobal.updateViewLayout(view, params);
+}
+
+@Override
+public void removeView(View view) {
+    mGlobal.removeView(view, false);
+}
+```
+
+# Bitmap
+![](https://upload-images.jianshu.io/upload_images/2618044-cd996dd172cce293.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp)
+
+## 配置信息与压缩方式
+**Bitmap 中有两个内部枚举类：**
+- Config 是用来设置颜色配置信息
+- CompressFormat 是用来设置压缩方式
+
+> 通常我们优化 Bitmap 时，当需要做性能优化或者防止 OOM，我们通常会使用 Bitmap.Config.RGB_565 这个配置，因为 Bitmap.Config.ALPHA_8 只有透明度，显示一般图片没有意义，Bitmap.Config.ARGB_4444 显示图片不清楚， Bitmap.Config.ARGB_8888 占用内存最多。
+
+
+
+## 常用操作
+### 裁剪、缩放、旋转、移动
+```java
+Matrix matrix = new Matrix();  
+// 缩放 
+matrix.postScale(0.8f, 0.9f);  
+// 左旋，参数为正则向右旋
+matrix.postRotate(-45);  
+// 平移, 在上一次修改的基础上进行再次修改 set 每次操作都是最新的 会覆盖上次的操作
+matrix.postTranslate(100, 80);
+// 裁剪并执行以上操作
+Bitmap bitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+````
+> 虽然Matrix还可以调用postSkew方法进行倾斜操作，但是却不可以在此时创建Bitmap时使用。
+
+### 保存与释放
+```java
+Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+File file = new File(getFilesDir(),"test.jpg");
+if(file.exists()){
+    file.delete();
+}
+try {
+    FileOutputStream outputStream=new FileOutputStream(file);
+    bitmap.compress(Bitmap.CompressFormat.JPEG,90,outputStream);
+    outputStream.flush();
+    outputStream.close();
+} catch (FileNotFoundException e) {
+    e.printStackTrace();
+} catch (IOException e) {
+    e.printStackTrace();
+}
+//释放bitmap的资源，这是一个不可逆转的操作
+bitmap.recycle();
+```
+
+### 图片压缩
+```java
+public static Bitmap compressImage(Bitmap image) {
+    if (image == null) {
+        return null;
+    }
+    ByteArrayOutputStream baos = null;
+    try {
+        baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] bytes = baos.toByteArray();
+        ByteArrayInputStream isBm = new ByteArrayInputStream(bytes);
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm);
+        return bitmap;
+    } catch (OutOfMemoryError e) {
+        e.printStackTrace();
+    } finally {
+            if (baos != null) {
+                baos.close();
+            }
+    }
+    return null;
+}
+```
+
+Bitmap 类的构造方法都是私有的，所以开发者不能直接 new 出一个 Bitmap 对象，只能通过 BitmapFactory 类的各种静态方法来实例化一个 Bitmap。
+
+生成 Bitmap 对象最终都是通过 JNI 调用方式实现的，所以需要调用 recycle() 方法来释放 C 部分的内存。
 
 ## 屏幕适配
 
@@ -334,6 +441,67 @@ wrap_content， padding， margin处理
 2、宽高限定符
 
 3、头条适配方案
+
+
+```java
+private static void setCustomDensity(@NonNull Activity activity, @NonNull final Application application) {
+    final DisplayMetrics appDisplayMetrics = application.getResources().getDisplayMetrics();
+    if (sNoncompatDensity == 0) {
+        sNoncompatDensity = appDisplayMetrics.density;
+        sNoncompatScaledDensity = appDisplayMetrics.scaledDensity;
+        // 监听字体切换
+        application.registerComponentCallbacks(new ComponentCallbacks() {
+            @Override
+            public void onConfigurationChanged(Configuration newConfig) {
+                if (newConfig != null && newConfig.fontScale > 0) {
+                    sNoncompatScaledDensity = application.getResources().getDisplayMetrics().scaledDensity;
+                }
+            }
+
+            @Override
+            public void onLowMemory() {
+
+            }
+        });
+    }
+    
+    // 适配后的dpi将统一为360dpi
+    final float targetDensity = appDisplayMetrics.widthPixels / 360;
+    final float targetScaledDensity = targetDensity * (sNoncompatScaledDensity / sNoncompatDensity);
+    final int targetDensityDpi = (int)(160 * targetDensity);
+
+    appDisplayMetrics.density = targetDensity;
+    appDisplayMetrics.scaledDensity = targetScaledDensity;
+    appDisplayMetrics.densityDpi = targetDensityDpi;
+
+    final DisplayMetrics activityDisplayMetrics = activity.getResources().getDisplayMetrics();
+    activityDisplayMetrics.density = targetDensity;
+    activityDisplayMetrics.scaledDensity = targetScaledDensity;
+    activityDisplayMetrics.densityDpi = targetDensityDpi
+}
+```
+
+4、刘海屏适配
+- Android P 刘海屏适配方案
+
+Android P 支持最新的全面屏以及为摄像头和扬声器预留空间的凹口屏幕。通过全新的 DisplayCutout 类，可以确定非功能区域的位置和形状，这些区域不应显示内容。要确定这些凹口屏幕区域是否存在及其位置，使用 getDisplayCutout() 函数。
+
+| DisplayCutout 类方法 | 说明
+|--|--
+| getBoundingRects() | 返回Rects的列表，每个Rects都是显示屏上非功能区域的边界矩形
+| getSafeInsetLeft () | 返回安全区域距离屏幕左边的距离，单位是px
+| getSafeInsetRight () | 返回安全区域距离屏幕右边的距离，单位是px
+| getSafeInsetTop () | 返回安全区域距离屏幕顶部的距离，单位是px
+| getSafeInsetBottom() | 返回安全区域距离屏幕底部的距离，单位是px
+
+Android P 中 WindowManager.LayoutParams 新增了一个布局参数属性 layoutInDisplayCutoutMode：
+
+| 模式 | 模式说明
+|--|--
+| LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT | 只有当DisplayCutout完全包含在系统栏中时，才允许窗口延伸到DisplayCutout区域。 否则，窗口布局不与DisplayCutout区域重叠。
+| LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER | 该窗口决不允许与DisplayCutout区域重叠。
+| LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES | 该窗口始终允许延伸到屏幕短边上的DisplayCutout区域。
+
 
 
 
