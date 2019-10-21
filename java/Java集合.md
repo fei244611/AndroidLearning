@@ -96,7 +96,7 @@ toArray()：转换为数组，addAll()调用该方法
   
   Queue/Deque方法：offer/offerFirst/OfferLast  poll()  peek()
   
-  Node<E> first,last：双向循环链表
+  Node<E> first,last：双向链表
   
   ```
     private static class Node<E> {
