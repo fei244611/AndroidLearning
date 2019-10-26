@@ -57,7 +57,7 @@
   }
   
   public interface IInterface{
-      //返回当前接口关联的 Binder 对象。
+      //返回当前接口关联的 Binder 对象，同进程返回自身，否则返回代理对象
       public IBinder asBinder();
   }
 
