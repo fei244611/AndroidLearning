@@ -252,6 +252,100 @@ DadaBinding：是一个可以通过在xml布局文件中实现ui逻辑的框架
 Navigation：可视化管理fragment的组件，通过在xml中配置fragment之间跳转的关系。
 
 
+## Hook
+---
+
+```
+public class HookUtil {
+
+    private Class<?> proxyActivity;
+
+    private Context context;
+
+    public HookUtil(Class<?> proxyActivity, Context context) {
+        this.proxyActivity = proxyActivity;
+        this.context = context;
+    }
+
+    public void hookAms() {
+        
+        //一路反射，直到拿到IActivityManager的对象
+        try {
+            Class<?> ActivityManagerNativeClss = Class.forName("android.app.ActivityManagerNative");
+            Field defaultFiled = ActivityManagerNativeClss.getDeclaredField("gDefault");
+            defaultFiled.setAccessible(true);
+            Object defaultValue = defaultFiled.get(null);
+            //反射SingleTon
+            Class<?> SingletonClass = Class.forName("android.util.Singleton");
+            Field mInstance = SingletonClass.getDeclaredField("mInstance");
+            mInstance.setAccessible(true);
+            //到这里已经拿到ActivityManager对象
+            Object iActivityManagerObject = mInstance.get(defaultValue);
+            
+            
+            //开始动态代理，用代理对象替换掉真实的ActivityManager，瞒天过海
+            Class<?> IActivityManagerIntercept = Class.forName("android.app.IActivityManager");
+
+            AmsInvocationHandler handler = new AmsInvocationHandler(iActivityManagerObject);
+
+            Object proxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[]{IActivityManagerIntercept}, handler);
+
+            //现在替换掉这个对象
+            mInstance.set(defaultValue, proxy);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private class AmsInvocationHandler implements InvocationHandler {
+
+        private Object iActivityManagerObject;
+
+        private AmsInvocationHandler(Object iActivityManagerObject) {
+            this.iActivityManagerObject = iActivityManagerObject;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+            Log.i("HookUtil", method.getName());
+            //我要在这里搞点事情
+            if ("startActivity".contains(method.getName())) {
+                Log.e("HookUtil","Activity已经开始启动");
+                Log.e("HookUtil","小弟到此一游！！！");
+            }
+            return method.invoke(iActivityManagerObject, args);
+        }
+    }
+}
+```
+
+## 热修复组件化
+---
+
+1、代码修复：
+
+底层替换方案：ArtMethod，对类的方法进行替换，无法对方法或字段进行增减
+
+类加载方案：dex数组替换，需要冷启动
+
+2、资源修复：
+
+instantRun：新建AssertManager，反射调用addAssertPath加载新资源，替换原有AssertManger
+
+设置新资源package_id 0x66，反射调用addAssertPath加载新资源包ID
+
+3、so修复：
+
+将补丁so库插入nativeLibraryDirectories数组的最前面，
+
+
+
+
+
 ## 性能优化
 ---
 
