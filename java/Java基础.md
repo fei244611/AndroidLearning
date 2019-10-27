@@ -72,6 +72,34 @@ switch参数：只支持能转换为int，enum或String的类型
 **setAccessible():**  设置可访问性
 
 
+## 注解
+---
+@interface：修饰注解
+
+1.@Target	注解用于什么地方
+
+CONSTRUCTOR: 用于描述构造器
+FIELD:用于描述域
+LOCAL_VARIABLE:用于描述局部变量
+METHOD:用于描述方法
+PACKAGE:用于描述包
+PARAMETER:用于描述参数
+TYPE:用于描述类、接口(包括注解类型) 或enum声明
+
+
+2.@Retention	什么时候使用该注解
+
+SOURCE:在源文件中有效（即源文件保留），在编译时将其抛弃掉。
+CLASS:在class文件中有效（即class保留），不会添加载到JVM中
+RUNTIME:在运行时有效（即运行时保留）
+
+3.@Documented	注解是否将包含在JavaDoc中
+
+4.@Inherited	是否允许子类继承该注解，表示父类如果添加此注解，子类也可以使用
+
+5.@Repeatable	java8添加的，可重复的，表该注解可以多次使用
+
+
 ## 强软弱虚引用
 ---
 
