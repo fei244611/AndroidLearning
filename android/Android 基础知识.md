@@ -13,6 +13,17 @@ onAttach() -> onCreate() -> onCreateView() ->onViewCreate() -> onActivityCreated
 
 4、onSaveInstanceState()
 
+5、Service生命周期：
+
+start方式：onCreate()——>onStartCmmmand()->onDestory()
+
+bind方式：onCreate()——>onBind()->onUnbind()->onDestory()
+
+先start后bind：onCreate()——>onStartCmmmand()——>onBind()——>onUnbind()[如果重写了此方法并返回了true]——>onRebind()
+
+
+6、BroadcastReceiver注册方式：静态注册，动态注册，onReceiver()
+
 ## 布局
 ---
 
