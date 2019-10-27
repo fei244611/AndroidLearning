@@ -25,6 +25,8 @@ zygoteInit.main()：创建server端socket，runSelectLoop等待AMS创建APP进�
 
 启动各种服务（ActivityManagerService...）
 
+<img src="https://upload-images.jianshu.io/upload_images/1836169-3c4882c6e2d40eda.png" width="600"/>
+
 
 
 ## Activity启动
