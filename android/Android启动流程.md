@@ -32,11 +32,16 @@ zygoteInit.main()：创建server端socket，runSelectLoop等待AMS创建APP进�
 
 1、Launcher通过Binder通知AMS（Instrumentation）
 
+<img src="https://upload-images.jianshu.io/upload_images/1836169-2b8391389465a765.png" width="600"/>
+
 AMS处理startActivity请求（SystemServer进程，ActivityStack）
+(ActivityManagerNative.getDefault()就可以得到远程的activity的服务AMS对应的Binder引用，并且调用asInterface将其转化为IActivityManage)
 
 launcher处理Pause请求
 
 AMS处理activityPause请求
+
+<img src="https://upload-images.jianshu.io/upload_images/1836169-56ea1eca9dc19c90.png" width="600"/>
 
 2、ActivityStack.startSpecificAcitivityLocked判断是否启动新进程
 
