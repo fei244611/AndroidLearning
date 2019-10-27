@@ -323,7 +323,7 @@ public class HookUtil {
 }
 ```
 
-## 热修复组件化
+## 热修复
 ---
 
 1、代码修复：
@@ -343,6 +343,18 @@ instantRun：新建AssertManager，反射调用addAssertPath加载新资源，�
 将补丁so库插入nativeLibraryDirectories数组的最前面，
 
 
+## 组件化
+---
+
+1、注解处理器生成映射文件
+
+apt及javapoet生成映射文件：新建RouterProcessor 继承自 AbstractProcessor,然后实现process方法
+
+初始化查找类
+
+3、依赖注入：
+
+注解处理器 ， 初始化查找
 
 
 
