@@ -39,7 +39,7 @@ zygoteInit.main()：创建server端socket，runSelectLoop等待AMS创建APP进�
 AMS处理startActivity请求（SystemServer进程，ActivityStack）
 (ActivityManagerNative.getDefault()就可以得到远程的activity的服务AMS对应的Binder引用，并且调用asInterface将其转化为IActivityManage)
 
-launcher处理Pause请求
+ActivityStackSupervisor.resumeTopActivityInnerLocked 调用H处理Pause请求
 
 AMS处理activityPause请求
 
@@ -49,7 +49,7 @@ AMS处理activityPause请求
 
 AMS.startProcessLocked()： 需要则Process.start()通过zygote进程启动app进程，不需要则通过H回调ActivityThread. handleLaunchActivity()
 
-ActivThread.main()： 创建ActivityThread并绑定AMS，开启Looper，创建Binder本地对象ApplicationThread()，绑定完成后调用ApplicationThreadProxy. scheduleLaunchActivity()
+ActivThread.main()： 创建ActivityThread并绑定AMS，开启Looper，创建Binder本地对象ApplicationThread()，绑定完成后调用ApplicationThreadProxy. scheduleLaunchActivity()，通过Handler发送LAUNCH_ACTIVITY
 
 
 **3、ActivityThread. performLaunchActivity：**
