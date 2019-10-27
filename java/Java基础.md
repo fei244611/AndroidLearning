@@ -132,7 +132,9 @@ intern():  native调用常量池查找等值对象
 **文件写入：** FileWritter FileOutputStream 
 
 InputStreamReader：以文本方式输入/输出 new InputStreamReader(FileInputStream)
+
 BufferReader：缓冲式文本读取，readline()方法，new BufferReader(InputStreamReader)
+
 BufferedInputStream:缓冲读写字节流，flush()方法，new BufferInputStream(FileInputStream)
 
 
