@@ -78,9 +78,24 @@ bind方式：onCreate()——>onBind()->onUnbind()->onDestory()
 ## ListView
 ---
 
-1、优化：ViewHolder，getView
+1、源码解析：https://www.jianshu.com/p/09e73ea58e31
 
-2、recycleView：ViewHolder，layoutManager，recycler
+RecycleBin：ActiveViews 和 ScrapViews
+
+绘制流程：onmeasure(),onLayout(),ondraw()
+
+onLayout：layoutChildren() -> fillDown/Up -> makeAndAddView（从ActiveViews，ScrapViews或LayoutInflater加载子view）
+
+setAdapter() ，滑动 ，notifyDataChange() 均会调用requestLayout方法
+
+2、recycleView：https://www.jianshu.com/p/1ae2f2fcff2c
+
+adapter，layoutManage（布局），ItemAnimator，ItemDecoration（分隔线）
+
+Recycler：负责缓存处理，mAttachedScrap、mChangedScrap，mCachedViews，mViewCacheExtension，mRecyclerPool（四级缓存）
+
+LayoutManager：负责绘制流程
+
 
 
 ## Handler
